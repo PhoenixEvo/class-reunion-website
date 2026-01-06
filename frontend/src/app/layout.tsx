@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter, Georgia } from 'next/font/google'
+import { Inter, Crimson_Text } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const georgia = Georgia({ weight: '400', subsets: ['latin'], variable: '--font-georgia' })
+const crimsonText = Crimson_Text({ weight: '400', subsets: ['latin'], variable: '--font-crimson' })
 
 export const metadata: Metadata = {
   title: 'Họp Lớp - Kỷ Niệm Chung',
@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="vi" className={`${inter.variable} ${georgia.variable}`}>
+    <html lang="vi" className={`${inter.variable} ${crimsonText.variable}`}>
       <body className={inter.className}>
         {children}
       </body>
