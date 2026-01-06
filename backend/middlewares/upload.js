@@ -1,15 +1,24 @@
 const multer = require('multer')
-const { CloudinaryStorage } = require('multer-storage-cloudinary')
 const cloudinary = require('../config/cloudinary')
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'class-reunion-gallery',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-    transformation: [{ width: 1200, height: 1200, crop: 'limit' }],
-  },
-})
+// Simple multer storage for now - will upload to cloudinary manually
+const storage = multer.memoryStorage()
+
+// Cloudinary upload function
+const uploadToCloudinary = (buffer, options = {}) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream({
+      folder: 'class-reunion-gallery',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+      transformation: [{ width: 1200, height: 1200, crop: 'limit' }],
+      ...options
+    }, (error, result) => {
+      if (error) reject(error)
+      else resolve(result)
+    })
+    uploadStream.end(buffer)
+  })
+}
 
 const upload = multer({
   storage: storage,
@@ -25,4 +34,4 @@ const upload = multer({
   },
 })
 
-module.exports = upload
+module.exports = { upload, uploadToCloudinary }

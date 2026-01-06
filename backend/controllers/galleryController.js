@@ -1,5 +1,6 @@
 const Gallery = require('../models/Gallery')
 const { validationResult } = require('express-validator')
+const { uploadToCloudinary } = require('../middlewares/upload')
 
 // Get all gallery images
 const getGalleryImages = async (req, res) => {
@@ -24,12 +25,14 @@ const uploadImage = async (req, res) => {
       return res.status(400).json({ error: 'No image file provided' })
     }
 
-    const { url, public_id } = req.file
     const { caption } = req.body
 
+    // Upload to Cloudinary
+    const cloudinaryResult = await uploadToCloudinary(req.file.buffer)
+
     const newImage = new Gallery({
-      url,
-      publicId: public_id,
+      url: cloudinaryResult.secure_url,
+      publicId: cloudinaryResult.public_id,
       caption: caption?.trim() || undefined,
     })
 
