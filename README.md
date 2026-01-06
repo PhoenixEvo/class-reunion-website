@@ -169,6 +169,7 @@ class-reunion-website/
 - **Typography**: Crimson Text cho headings, Inter cho body text
 - **Animations**: Floating names với adaptive grid system, smooth transitions
 - **Audio**: Nhạc nền hoài niệm với floating controls
+- **Gallery**: Upload nhiều ảnh cùng lúc với progress tracking
 - **Responsive**: Adaptive grid (4x8 mobile, 6x6 tablet, 8x6 desktop)
 
 ## 🚀 Triển khai

@@ -17,6 +17,8 @@ export default function Gallery() {
   const [images, setImages] = useState<GalleryImage[]>([])
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({})
+  const [uploadStatus, setUploadStatus] = useState<{[key: string]: 'pending' | 'uploading' | 'success' | 'error'}>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -38,34 +40,86 @@ export default function Gallery() {
   }
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+    const files = event.target.files
+    if (!files || files.length === 0) return
 
     setIsUploading(true)
 
-    const formData = new FormData()
-    formData.append('image', file)
+    // Initialize progress and status for all files
+    const initialProgress: {[key: string]: number} = {}
+    const initialStatus: {[key: string]: 'pending' | 'uploading' | 'success' | 'error'} = {}
+
+    Array.from(files).forEach(file => {
+      initialProgress[file.name] = 0
+      initialStatus[file.name] = 'pending'
+    })
+
+    setUploadProgress(initialProgress)
+    setUploadStatus(initialStatus)
 
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}/api/gallery/upload`
+    const uploadPromises = Array.from(files).map(async (file) => {
+      // Update status to uploading
+      setUploadStatus(prev => ({ ...prev, [file.name]: 'uploading' }))
 
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        body: formData,
-      })
+      const formData = new FormData()
+      formData.append('image', file)
 
-      if (response.ok) {
-        const newImage = await response.json()
-        setImages(prev => [newImage, ...prev])
-      } else {
-        const errorText = await response.text()
-        alert(`Upload failed: ${response.status} - ${errorText}`)
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (response.ok) {
+          const newImage = await response.json()
+          setImages(prev => [newImage, ...prev])
+          setUploadStatus(prev => ({ ...prev, [file.name]: 'success' }))
+          setUploadProgress(prev => ({ ...prev, [file.name]: 100 }))
+          return { success: true, file: file.name }
+        } else {
+          const errorText = await response.text()
+          setUploadStatus(prev => ({ ...prev, [file.name]: 'error' }))
+          return { success: false, file: file.name, error: `${response.status} - ${errorText}` }
+        }
+      } catch (error) {
+        setUploadStatus(prev => ({ ...prev, [file.name]: 'error' }))
+        return {
+          success: false,
+          file: file.name,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        }
       }
-    } catch (error) {
-      alert(`Network error: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    } finally {
-      setIsUploading(false)
+    })
+
+    // Wait for all uploads to complete
+    const results = await Promise.all(uploadPromises)
+
+    // Show summary
+    const successCount = results.filter(r => r.success).length
+    const errorCount = results.filter(r => !r.success).length
+
+    if (errorCount === 0) {
+      alert(`✅ Successfully uploaded ${successCount} image${successCount > 1 ? 's' : ''}!`)
+    } else if (successCount === 0) {
+      alert(`❌ Failed to upload all images. Check console for details.`)
+    } else {
+      alert(`⚠️ Uploaded ${successCount} image${successCount > 1 ? 's' : ''}, ${errorCount} failed. Check console for details.`)
     }
+
+    // Log errors to console
+    const errors = results.filter(r => !r.success)
+    if (errors.length > 0) {
+      console.error('Upload errors:', errors)
+    }
+
+    setIsUploading(false)
+
+    // Clear progress after 3 seconds
+    setTimeout(() => {
+      setUploadProgress({})
+      setUploadStatus({})
+    }, 3000)
   }
 
   const containerVariants = {
@@ -113,14 +167,51 @@ export default function Gallery() {
             <input
               type="file"
               accept="image/*"
+              multiple
               onChange={handleImageUpload}
               className="hidden"
               disabled={isUploading}
             />
           </label>
           <p className="text-sm text-nostalgic-brown/60 mt-2">
-            Hình ảnh sẽ được chia sẻ ẩn danh
+            Hình ảnh sẽ được chia sẻ ẩn danh • Chọn nhiều ảnh cùng lúc được
           </p>
+
+          {/* Upload Progress */}
+          {Object.keys(uploadStatus).length > 0 && (
+            <div className="mt-4 max-w-md mx-auto">
+              <div className="space-y-2">
+                {Object.entries(uploadStatus).map(([fileName, status]) => (
+                  <div key={fileName} className="flex items-center gap-2 text-sm">
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center text-xs ${
+                      status === 'success' ? 'bg-green-500 text-white' :
+                      status === 'error' ? 'bg-red-500 text-white' :
+                      status === 'uploading' ? 'bg-blue-500 text-white' :
+                      'bg-gray-300 text-gray-600'
+                    }`}>
+                      {status === 'success' ? '✓' :
+                       status === 'error' ? '✗' :
+                       status === 'uploading' ? '↻' : '○'}
+                    </div>
+                    <span className="flex-1 truncate text-left">
+                      {fileName.length > 30 ? fileName.substring(0, 30) + '...' : fileName}
+                    </span>
+                    <span className={`text-xs ${
+                      status === 'success' ? 'text-green-600' :
+                      status === 'error' ? 'text-red-600' :
+                      status === 'uploading' ? 'text-blue-600' :
+                      'text-gray-500'
+                    }`}>
+                      {status === 'success' ? 'Hoàn thành' :
+                       status === 'error' ? 'Lỗi' :
+                       status === 'uploading' ? 'Đang tải...' :
+                       'Chờ'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* Gallery Grid */}
