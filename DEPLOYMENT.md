@@ -75,6 +75,8 @@ Build Command: npm run build
 Publish Directory: out
 ```
 
+**Quan trọng**: Frontend được cấu hình để export static files, nên sẽ tạo thư mục `out` thay vì `.next`.
+
 ### 2. Environment Variables
 
 ```
