@@ -1,0 +1,32 @@
+🔍 DEBUG FAVICON
+
+Nếu favicon không hiện:
+
+1. Check file favicon.ico:
+   - Phải là file binary .ico (không phải text)
+   - Size: 16x16, 32x32px
+   - Không được để file rỗng
+
+2. Clear browser cache:
+   - Ctrl+F5 (hard refresh)
+   - Hoặc mở incognito mode
+
+3. Check console errors:
+   - Network tab: favicon.ico có load được không
+   - Status 200 OK?
+
+4. Test URL trực tiếp:
+   - http://localhost:3000/favicon.ico (dev)
+   - https://your-domain.onrender.com/favicon.ico (prod)
+
+5. Alternative: Dùng PNG favicon
+   - Đổi tên thành favicon.png
+   - Update metadata trong layout.tsx:
+     icons: { icon: '/favicon.png' }
+
+6. Tools tạo favicon:
+   - https://favicon.io/favicon-generator/
+   - https://www.favicon-generator.org/
+   - Upload ảnh → Download .ico file
+
+7. Replace file hiện tại bằng file .ico thật!

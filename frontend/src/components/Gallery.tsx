@@ -62,7 +62,7 @@ export default function Gallery() {
         alert(`Upload failed: ${response.status} - ${errorText}`)
       }
     } catch (error) {
-      alert(`Network error: ${error.message}`)
+      alert(`Network error: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsUploading(false)
     }

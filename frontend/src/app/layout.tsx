@@ -9,6 +9,13 @@ const crimsonText = Crimson_Text({ weight: '400', subsets: ['latin'], variable: 
 export const metadata: Metadata = {
   title: 'Họp Lớp - Kỷ Niệm Chung',
   description: 'Website họp lớp để nhớ lại những kỷ niệm đẹp',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export default function RootLayout({
