@@ -27,7 +27,38 @@
   }
 
   .floating-text {
-    @apply absolute text-nostalgic-brown/20 font-serif text-lg
-           animate-float select-none pointer-events-none;
+    position: absolute;
+    font-size: clamp(12px, 2.2vw, 16px); /* Responsive font size */
+    font-weight: 500;
+    white-space: nowrap;
+    color: rgb(95, 75, 55); /* Nostalgic brown with opacity */
+    will-change: transform, opacity;
+    z-index: 10;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
   }
+
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .floating-text {
+      font-size: 12px;
+      color: rgba(139, 116, 85, 0.25); /* Slightly more visible on mobile */
+    }
+  }
+
+  /* Tablet adjustments */
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .floating-text {
+      font-size: 14px;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    .floating-text {
+      font-size: 16px;
+    }
+  }
+  
 }
