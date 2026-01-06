@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-nostalgic-cream font-sans;
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(168, 181, 160, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(212, 167, 116, 0.1) 0%, transparent 50%);
+  }
+}
+
+@layer components {
+  .nostalgic-card {
+    @apply bg-white/80 backdrop-blur-sm rounded-lg shadow-lg border border-nostalgic-sage/20;
+  }
+
+  .nostalgic-button {
+    @apply px-6 py-3 bg-nostalgic-warm text-white rounded-lg shadow-md
+           hover:shadow-lg transition-all duration-300 hover:scale-105
+           focus:outline-none focus:ring-2 focus:ring-nostalgic-warm/50;
+  }
+
+  .floating-text {
+    @apply absolute text-nostalgic-brown/20 font-serif text-lg
+           animate-float select-none pointer-events-none;
+  }
+}
