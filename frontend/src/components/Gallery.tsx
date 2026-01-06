@@ -42,11 +42,14 @@ export default function Gallery() {
     if (!file) return
 
     setIsUploading(true)
+
     const formData = new FormData()
     formData.append('image', file)
 
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}/api/gallery/upload`
+
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/gallery/upload`, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         body: formData,
       })
@@ -54,9 +57,12 @@ export default function Gallery() {
       if (response.ok) {
         const newImage = await response.json()
         setImages(prev => [newImage, ...prev])
+      } else {
+        const errorText = await response.text()
+        alert(`Upload failed: ${response.status} - ${errorText}`)
       }
     } catch (error) {
-      console.error('Error uploading image:', error)
+      alert(`Network error: ${error.message}`)
     } finally {
       setIsUploading(false)
     }

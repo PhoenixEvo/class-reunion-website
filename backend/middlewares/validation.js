@@ -5,6 +5,11 @@ const validateQuestion = [
     .trim()
     .isLength({ min: 5, max: 500 })
     .withMessage('Question must be between 5 and 500 characters'),
+  body('nickname')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Nickname must be less than 50 characters'),
 ]
 
 const validateAnswer = [

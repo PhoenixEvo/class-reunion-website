@@ -18,6 +18,11 @@ const questionSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  nickname: {
+    type: String,
+    trim: true,
+    default: 'Ẩn danh',
+  },
   answers: [answerSchema],
   createdAt: {
     type: Date,

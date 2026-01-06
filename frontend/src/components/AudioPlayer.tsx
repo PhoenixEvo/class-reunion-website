@@ -36,9 +36,7 @@ export default function AudioPlayer() {
         setIsPlaying(true)
         setShowEnablePrompt(false)
         localStorage.setItem('musicEnabled', 'true')
-        console.log('🎵 Music auto-played successfully')
       } catch (error) {
-        console.log('Auto-play blocked by browser policy')
         // Show enable prompt, but don't be annoying
         const musicEnabled = localStorage.getItem('musicEnabled') === 'true'
         if (!musicEnabled) {
@@ -65,15 +63,11 @@ export default function AudioPlayer() {
 
     audio.addEventListener('loadeddata', () => {
       setIsLoaded(true)
-      console.log('🎵 Music file loaded')
 
       // Check if user has already interacted
       const musicEnabled = localStorage.getItem('musicEnabled') === 'true'
       if (musicEnabled) {
-        console.log('🎵 User previously enabled music, trying auto-play...')
         tryAutoPlay()
-      } else {
-        console.log('🎵 Waiting for user interaction...')
       }
     })
 
@@ -110,7 +104,7 @@ export default function AudioPlayer() {
         setIsPlaying(true)
       }
     } catch (error) {
-      console.log('Playback failed:', error)
+      // Playback failed
     }
   }
 

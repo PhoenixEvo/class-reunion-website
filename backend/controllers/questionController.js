@@ -20,16 +20,16 @@ const createQuestion = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { question } = req.body
+    const { question, nickname } = req.body
 
     const newQuestion = new Question({
       question: question.trim(),
+      nickname: nickname?.trim() || 'Ẩn danh',
     })
 
     const savedQuestion = await newQuestion.save()
     res.status(201).json(savedQuestion)
   } catch (error) {
-    console.error('Error creating question:', error)
     res.status(500).json({ error: 'Failed to create question' })
   }
 }

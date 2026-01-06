@@ -199,7 +199,11 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         <p className="text-base text-nostalgic-brown/80 mb-10 leading-relaxed">
           Website này không chỉ để xem, mà để nhớ rằng chúng ta đã từng là một
           lớp. Hãy cùng nhau ôn lại những kỷ niệm đẹp và chia sẻ những câu hỏi
-          thầm kín.
+          thầm kín. <br />
+          Designed by <br />
+          <a href="https://www.facebook.com/nhatphst1203/" target="_blank" className="text-nostalgic-warm hover:text-nostalgic-warm/80 transition-colors">
+            <span className="underline">LopTruong3Doi</span>
+          </a>
         </p>
 
         <div className="flex flex-col sm:flex-row gap-5 justify-center">

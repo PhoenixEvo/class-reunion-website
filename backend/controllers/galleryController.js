@@ -30,6 +30,7 @@ const uploadImage = async (req, res) => {
     // Upload to Cloudinary
     const cloudinaryResult = await uploadToCloudinary(req.file.buffer)
 
+    // Save to MongoDB
     const newImage = new Gallery({
       url: cloudinaryResult.secure_url,
       publicId: cloudinaryResult.public_id,
@@ -39,7 +40,6 @@ const uploadImage = async (req, res) => {
     const savedImage = await newImage.save()
     res.status(201).json(savedImage)
   } catch (error) {
-    console.error('Error uploading image:', error)
     res.status(500).json({ error: 'Failed to upload image' })
   }
 }

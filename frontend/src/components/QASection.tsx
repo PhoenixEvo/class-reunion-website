@@ -7,6 +7,7 @@ import { ChevronDown, Send, MessageSquare } from 'lucide-react'
 interface Question {
   _id: string
   question: string
+  nickname?: string
   answers: Answer[]
   createdAt: string
 }
@@ -20,6 +21,7 @@ interface Answer {
 export default function QASection() {
   const [questions, setQuestions] = useState<Question[]>([])
   const [newQuestion, setNewQuestion] = useState('')
+  const [newNickname, setNewNickname] = useState('')
   const [newAnswer, setNewAnswer] = useState('')
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -54,13 +56,17 @@ export default function QASection() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: newQuestion.trim() }),
+        body: JSON.stringify({
+          question: newQuestion.trim(),
+          nickname: newNickname.trim() || undefined
+        }),
       })
 
       if (response.ok) {
         const newQ = await response.json()
         setQuestions(prev => [newQ, ...prev])
         setNewQuestion('')
+        setNewNickname('')
       }
     } catch (error) {
       console.error('Error submitting question:', error)
@@ -146,17 +152,35 @@ export default function QASection() {
           <form onSubmit={handleSubmitQuestion} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-nostalgic-brown mb-2">
+                Biệt danh (tùy chọn)
+              </label>
+              <input
+                type="text"
+                value={newNickname}
+                onChange={(e) => setNewNickname(e.target.value)}
+                placeholder="Để trống sẽ là 'Ẩn danh'"
+                className="w-full px-4 py-2 border border-nostalgic-sage/30 rounded-lg focus:ring-2 focus:ring-nostalgic-warm focus:border-transparent"
+                maxLength={50}
+              />
+              <p className="text-xs text-nostalgic-sage mt-1">
+                Nếu không điền, câu hỏi sẽ hiển thị là "Ẩn danh"
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-nostalgic-brown mb-2">
                 Câu hỏi của bạn
               </label>
               <textarea
                 value={newQuestion}
                 onChange={(e) => setNewQuestion(e.target.value)}
-                placeholder="Bạn muốn hỏi điều gì? (Ẩn danh hoàn toàn)"
+                placeholder="Bạn muốn hỏi điều gì?"
                 className="w-full px-4 py-3 border border-nostalgic-sage/30 rounded-lg focus:ring-2 focus:ring-nostalgic-warm focus:border-transparent resize-none"
                 rows={3}
                 required
               />
             </div>
+
             <div className="flex justify-end">
               <button
                 type="submit"
@@ -206,9 +230,13 @@ export default function QASection() {
                       <p className="text-nostalgic-brown text-lg mb-2">
                         {question.question}
                       </p>
-                      <p className="text-sm text-nostalgic-sage">
-                        {formatDate(question.createdAt)}
-                      </p>
+                      <div className="flex items-center gap-2 text-sm text-nostalgic-sage">
+                        <span className="font-medium text-nostalgic-brown">
+                          {question.nickname || 'Ẩn danh'}
+                        </span>
+                        <span>•</span>
+                        <span>{formatDate(question.createdAt)}</span>
+                      </div>
                     </div>
                     <button
                       onClick={() =>
