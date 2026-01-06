@@ -100,6 +100,36 @@ NEXT_PUBLIC_API_URL=http://localhost:5000
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:5000
 
+## 🎵 Nhạc nền
+
+Website có tích hợp nhạc nền hoài niệm với controls thông minh:
+
+- **Auto-play**: Tự động phát (có thể bị browser chặn)
+- **Smart prompt**: Hiện popup yêu cầu bật nhạc nếu bị chặn
+- **Controls**: Play/Pause, Volume slider, Mute
+- **Auto-hide**: Ẩn controls sau 3s không tương tác
+- **Position**: Floating ở góc dưới phải
+- **Loop**: Tự động lặp
+
+### Auto-play behavior:
+
+1. **Lần đầu**: Browser có thể chặn auto-play (theo chính sách bảo mật)
+2. **Sau tương tác**: User click/scroll/touch → nhạc tự phát
+3. **Lần sau**: Nhớ lựa chọn, tự động phát nếu đã bật
+4. **Popup**: Chỉ hiện nếu bị chặn, không làm phiền
+
+**📱 Mobile**: Cần user interaction đầu tiên để phát nhạc
+
+### Thay đổi nhạc nền:
+
+1. Upload file MP3 vào `frontend/public/nhac-nen.mp3`
+2. Hoặc thay URL trong `frontend/src/components/AudioPlayer.tsx`:
+
+```javascript
+<source src="/nhac-nen.mp3" type="audio/mp3" />
+<source src="https://example.com/song.mp3" type="audio/mp3" />
+```
+
 ## 📁 Cấu trúc Project
 
 ```
@@ -136,9 +166,10 @@ class-reunion-website/
 ## 🎨 Thiết kế UI/UX
 
 - **Màu sắc**: Tông màu ấm áp, hoài niệm (cream, sage, warm brown)
-- **Typography**: Georgia cho headings, Inter cho body text
-- **Animations**: Floating names, stagger animations, smooth transitions
-- **Responsive**: Mobile-first design approach
+- **Typography**: Crimson Text cho headings, Inter cho body text
+- **Animations**: Floating names với adaptive grid system, smooth transitions
+- **Audio**: Nhạc nền hoài niệm với floating controls
+- **Responsive**: Adaptive grid (4x8 mobile, 6x6 tablet, 8x6 desktop)
 
 ## 🚀 Triển khai
 
