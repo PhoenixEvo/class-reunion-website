@@ -115,18 +115,8 @@ export default function AudioPlayer() {
   }
 
   const toggleMute = () => {
-    const audio = audioRef.current
-    if (!audio) return
-
     resetControlsTimeout()
-
-    if (isMuted) {
-      audio.volume = volume
-      setIsMuted(false)
-    } else {
-      audio.volume = 0
-      setIsMuted(true)
-    }
+    setIsMuted(!isMuted)
   }
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,12 +124,15 @@ export default function AudioPlayer() {
     setVolume(newVolume)
     setIsMuted(false)
     resetControlsTimeout()
+  }
 
+  // Sync volume with audio element
+  useEffect(() => {
     const audio = audioRef.current
     if (audio) {
-      audio.volume = newVolume
+      audio.volume = isMuted ? 0 : volume
     }
-  }
+  }, [volume, isMuted])
 
   return (
     <>
@@ -148,7 +141,6 @@ export default function AudioPlayer() {
         ref={audioRef}
         loop
         preload="none"
-        volume={volume}
       >
         {/* Nhạc nền local (ưu tiên) */}
         <source src="/nhac-nen.mp3" type="audio/mp3" />
