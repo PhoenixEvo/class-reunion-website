@@ -147,6 +147,7 @@ class-reunion-website/
 1. **Backend**:
    - Tạo Web Service
    - Connect GitHub repo
+   - **Root Directory**: `backend`
    - Set environment variables
    - Build command: `npm install`
    - Start command: `npm start`

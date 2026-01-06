@@ -38,6 +38,7 @@ Website sẽ được triển khai dưới dạng:
 ```
 Name: class-reunion-backend
 Environment: Node
+Root Directory: backend
 Build Command: npm install
 Start Command: npm start
 ```
@@ -146,6 +147,17 @@ Redeploy backend để áp dụng thay đổi CORS.
 - Verify CORS settings
 - Check backend URL trong frontend
 - Test API endpoints directly
+
+### Build failed - Could not read package.json
+- **Nguyên nhân**: Root Directory không được set đúng
+- **Giải pháp**: Đảm bảo `Root Directory: backend` trong Web Service settings
+- **Kiểm tra**: Build log sẽ hiển thị đường dẫn tìm package.json
+
+### Backend deploy thành công nhưng API không hoạt động
+- Kiểm tra environment variables đã được set chưa
+- Verify MongoDB connection string format
+- Check Cloudinary credentials
+- Test API trực tiếp: `GET https://your-backend-url.onrender.com/api/health`
 
 ## Chi phí
 
